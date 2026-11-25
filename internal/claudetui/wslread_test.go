@@ -107,6 +107,9 @@ func TestWSLReadNewSession(t *testing.T) {
 // A session id is the bridge's, but never reaches the shell as anything
 // but a word; a shell that never says it is ready fails the run.
 func TestWSLReadRefuses(t *testing.T) {
+	if runtime.GOOS == "freebsd" {
+		t.Skip("FreeBSD's sh exec-optimizes the fixture's cat >/dev/null, closing the stdout pipe before the wait ends")
+	}
 	wslHere(t)
 	if _, err := startWSLRead("Ubuntu", "x; rm -rf ~", t.TempDir()); err == nil {
 		t.Fatal("an id with a shell's words in it")
