@@ -1,4 +1,4 @@
-//go:build darwin || linux
+//go:build darwin || linux || freebsd
 
 package claudetui
 
@@ -19,7 +19,7 @@ func (s *shim) waiting() (cmds []running, rssKiB int64, ok bool) {
 	if s.cmd == nil || s.cmd.Process == nil {
 		return nil, 0, false
 	}
-	out, err := proc.Command("ps", "-A", "-o", "pid=,ppid=,rss=,etime=,command=").Output()
+	out, err := proc.Command("ps", psOutputArgs...).Output()
 	if err != nil {
 		return nil, 0, false
 	}
